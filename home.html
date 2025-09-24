@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>QB-Ledg</title>
+    <link rel="stylesheet" href="./assets/css/styles.css" />
+     <link rel="icon" type="image/x-icon" href="./assets/ico/favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-content">
+      <div class="brand">
+        <div class="logo">QB</div>
+        <div class="brand-info">
+          <h1>QB-Ledg</h1>
+          <p>نظام إدارة العُهدة الاحترافي</p>
+        </div>
+      </div>
+      <div class="summary-card">
+        <div class="summary-grid">
+          <div class="summary-item">
+            <h3 class="summary-total" id="totalAdvances">0.00</h3>
+            <p>إجمالي العُهد</p>
+          </div>
+          <div class="summary-item">
+            <h3 class="summary-spent" id="totalSpent">0.00</h3>
+            <p>المصروف</p>
+          </div>
+          <div class="summary-item">
+            <h3 class="summary-remaining" id="totalRemaining">0.00</h3>
+            <p>المتبقي</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Navigation -->
+  <nav class="nav-tabs">
+    <button class="nav-tab active" data-tab="dashboard">لوحة التحكم</button>
+    <button class="nav-tab" data-tab="advances">العُهد</button>
+    <button class="nav-tab" data-tab="expenses">المصروفات</button>
+    <button class="nav-tab" data-tab="reports">التقارير</button>
+  </nav>
+
+  <!-- Main Container -->
+  <div class="container">
+    <!-- Dashboard Tab -->
+    <div class="tab-pane" id="tab-dashboard">
+      <div class="form-grid cols-2">
+        <!-- Add Advance Form -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">إضافة عُهدة جديدة</h2>
+          </div>
+          <form id="advanceForm">
+            <div class="form-grid cols-2">
+              <div class="form-group">
+                <label class="form-label">رقم التتبّع</label>
+                <input id="adv-track" class="form-input" readonly placeholder="يُنشأ تلقائيًا" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">التاريخ</label>
+                <input id="adv-date" class="form-input" type="date" />
+              </div>
+            </div>
+            <div class="form-group">
+              <label class="form-label">اسم/وصف العُهدة</label>
+              <input id="adv-title" class="form-input" required placeholder="مثال: عُهدة مشروع..." />
+            </div>
+            <div class="form-group">
+              <label class="form-label">المبلغ</label>
+              <input id="adv-amount" class="form-input" type="number" inputmode="decimal" min="0" step="0.01" required placeholder="0.00" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">ملاحظات</label>
+              <textarea id="adv-notes" class="form-input" placeholder="تفاصيل إضافية (اختياري)"></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+              حفظ العُهدة
+            </button>
+          </form>
+        </div>
+
+        <!-- Add Expense Form -->
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">إضافة مصروف</h2>
+          </div>
+          <form id="expenseForm">
+            <div class="form-grid cols-2">
+              <div class="form-group">
+                <label class="form-label">اختر العُهدة</label>
+                <select id="exp-advance" class="form-input" required></select>
+              </div>
+              <div class="form-group">
+                <label class="form-label">التاريخ</label>
+                <input id="exp-date" class="form-input" type="date" />
+              </div>
+            </div>
+            <div class="form-grid cols-2">
+              <div class="form-group">
+                <label class="form-label">المبلغ المصروف</label>
+                <input id="exp-amount" class="form-input" type="number" inputmode="decimal" min="0" step="0.01" required placeholder="0.00" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">النوع</label>
+                <select id="exp-kind" class="form-input">
+                  <option value="invoice">فاتورة</option>
+                  <option value="no-invoice">بدون فاتورة</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-group" id="invoiceRow" style="display:none">
+              <label class="form-label">رقم الفاتورة</label>
+              <input id="exp-invoice" class="form-input" placeholder="مثال: INV-2025-001" />
+            </div>
+            <div class="form-grid cols-2">
+              <div class="form-group">
+                <label class="form-label">اسم المصروف</label>
+                <input id="exp-name" class="form-input" required placeholder="مثال: شراء قرطاسية" />
+              </div>
+              <div class="form-group">
+                <label class="form-label">ملاحظات</label>
+                <input id="exp-notes" class="form-input" placeholder="اختياري" />
+              </div>
+            </div>
+            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
+              تسجيل المصروف
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- Advances Tab -->
+    <div class="tab-pane" id="tab-advances" hidden>
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">إدارة العُهد</h2>
+          <div class="toolbar-actions">
+            <button class="btn btn-secondary btn-sm" id="btnExportJSON">تصدير</button>
+            <button class="btn btn-secondary btn-sm" id="btnImportJSON">استيراد</button>
+            <input id="importFile" type="file" accept="application/json" hidden />
+          </div>
+        </div>
+        <div class="toolbar">
+          <input id="searchAdv" class="search-input" placeholder="بحث في العُهد..." />
+        </div>
+        <div id="advTableWrap"></div>
+      </div>
+    </div>
+
+    <!-- Expenses Tab -->
+    <div class="tab-pane" id="tab-expenses" hidden>
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">إدارة المصروفات</h2>
+        </div>
+        <div class="toolbar">
+          <input id="searchExp" class="search-input" placeholder="بحث في المصروفات..." />
+          <div class="toolbar-actions">
+            <select id="filterAdvance" class="form-input" style="min-width: 200px;"></select>
+            <button class="btn btn-secondary btn-sm" id="btnClearFilter">إلغاء التصفية</button>
+          </div>
+        </div>
+        <div id="expTableWrap"></div>
+      </div>
+    </div>
+
+    <!-- Reports Tab -->
+    <div class="tab-pane" id="tab-reports" hidden>
+      <div class="reports-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">ملخص عام</h2>
+          </div>
+          <div id="reportSummary"></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h2 class="card-title">تقرير عُهدة محددة</h2>
+            <button class="btn btn-secondary btn-sm" id="btnPrint">طباعة</button>
+          </div>
+          <div class="form-group">
+            <select id="reportAdvance" class="form-input"></select>
+          </div>
+          <div id="reportDetails"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Floating Action Button -->
+  <button class="fab" id="fabAdd" title="إضافة سريع">+</button>
+
+<script src="./assets/js/storage.gas.js"></script>
+<script src="./assets/js/app.js"></script>
+
+
+</body>
+</html>
