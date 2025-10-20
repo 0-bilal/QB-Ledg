@@ -1,208 +1,380 @@
 <!DOCTYPE html>
 <html lang="ar" dir="rtl">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>QB-Ledg</title>
-    <link rel="stylesheet" href="./assets/css/styles.css" />
+      <link rel="stylesheet" href="./assets/css/styles.css" />
      <link rel="icon" type="image/x-icon" href="./assets/ico/favicon.ico">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
 
+  </style>
 </head>
 <body>
-  <!-- Header -->
   <header class="header">
-    <div class="header-content">
+    <div class="header-top">
       <div class="brand">
         <div class="logo">QB</div>
         <div class="brand-info">
           <h1>QB-Ledg</h1>
-          <p>نظام إدارة العُهدة الاحترافي</p>
+          <p>نظام إدارة العهدة</p>
         </div>
       </div>
-      <div class="summary-card">
-        <div class="summary-grid">
-          <div class="summary-item">
-            <h3 class="summary-total" id="totalAdvances">0.00</h3>
-            <p>إجمالي العُهد</p>
-          </div>
-          <div class="summary-item">
-            <h3 class="summary-spent" id="totalSpent">0.00</h3>
-            <p>المصروف</p>
-          </div>
-          <div class="summary-item">
-            <h3 class="summary-remaining" id="totalRemaining">0.00</h3>
-            <p>المتبقي</p>
-          </div>
-        </div>
+    </div>
+    
+    <div class="summary-stats">
+      <div class="stat-card">
+        <div class="stat-value total" id="totalAdvances">0.00</div>
+        <div class="stat-label">إجمالي العهد</div>
       </div>
+      <div class="stat-card">
+        <div class="stat-value spent" id="totalSpent">0.00</div>
+        <div class="stat-label">المصروف</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-value remaining" id="totalRemaining">0.00</div>
+        <div class="stat-label">المتبقي</div>
+      </div>
+    </div>
+
+    <div class="desktop-tabs">
+      <button class="btn btn-primary desktop-add-btn" onclick="toggleAddMenu()">+ إضافة جديد</button>
+      <button class="desktop-tab active" onclick="switchTab('advances')">العهد</button>
+      <button class="desktop-tab" onclick="switchTab('expenses')">المصروفات</button>
+      <button class="desktop-tab" onclick="switchTab('reports')">التقارير</button>
+      <button class="desktop-tab" onclick="switchTab('about')">عن النظام</button>
     </div>
   </header>
 
-  <!-- Navigation -->
-  <nav class="nav-tabs">
-    <button class="nav-tab active" data-tab="dashboard">لوحة التحكم</button>
-    <button class="nav-tab" data-tab="advances">العُهد</button>
-    <button class="nav-tab" data-tab="expenses">المصروفات</button>
-    <button class="nav-tab" data-tab="reports">التقارير</button>
-  </nav>
-
-  <!-- Main Container -->
   <div class="container">
-    <!-- Dashboard Tab -->
-    <div class="tab-pane" id="tab-dashboard">
-      <div class="form-grid cols-2">
-        <!-- Add Advance Form -->
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">إضافة عُهدة جديدة</h2>
-          </div>
-          <form id="advanceForm">
-            <div class="form-grid cols-2">
-              <div class="form-group">
-                <label class="form-label">رقم التتبّع</label>
-                <input id="adv-track" class="form-input" readonly placeholder="يُنشأ تلقائيًا" />
-              </div>
-              <div class="form-group">
-                <label class="form-label">التاريخ</label>
-                <input id="adv-date" class="form-input" type="date" />
-              </div>
-            </div>
-            <div class="form-group">
-              <label class="form-label">اسم/وصف العُهدة</label>
-              <input id="adv-title" class="form-input" required placeholder="مثال: عُهدة مشروع..." />
-            </div>
-            <div class="form-group">
-              <label class="form-label">المبلغ</label>
-              <input id="adv-amount" class="form-input" type="number" inputmode="decimal" min="0" step="0.01" required placeholder="0.00" />
-            </div>
-            <div class="form-group">
-              <label class="form-label">ملاحظات</label>
-              <textarea id="adv-notes" class="form-input" placeholder="تفاصيل إضافية (اختياري)"></textarea>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
-              حفظ العُهدة
-            </button>
-          </form>
-        </div>
-
-        <!-- Add Expense Form -->
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">إضافة مصروف</h2>
-          </div>
-          <form id="expenseForm">
-            <div class="form-grid cols-2">
-              <div class="form-group">
-                <label class="form-label">اختر العُهدة</label>
-                <select id="exp-advance" class="form-input" required></select>
-              </div>
-              <div class="form-group">
-                <label class="form-label">التاريخ</label>
-                <input id="exp-date" class="form-input" type="date" />
-              </div>
-            </div>
-            <div class="form-grid cols-2">
-              <div class="form-group">
-                <label class="form-label">المبلغ المصروف</label>
-                <input id="exp-amount" class="form-input" type="number" inputmode="decimal" min="0" step="0.01" required placeholder="0.00" />
-              </div>
-              <div class="form-group">
-                <label class="form-label">النوع</label>
-                <select id="exp-kind" class="form-input">
-                  <option value="invoice">فاتورة</option>
-                  <option value="no-invoice">بدون فاتورة</option>
-                </select>
-              </div>
-            </div>
-            <div class="form-group" id="invoiceRow" style="display:none">
-              <label class="form-label">رقم الفاتورة</label>
-              <input id="exp-invoice" class="form-input" placeholder="مثال: INV-2025-001" />
-            </div>
-            <div class="form-grid cols-2">
-              <div class="form-group">
-                <label class="form-label">اسم المصروف</label>
-                <input id="exp-name" class="form-input" required placeholder="مثال: شراء قرطاسية" />
-              </div>
-              <div class="form-group">
-                <label class="form-label">ملاحظات</label>
-                <input id="exp-notes" class="form-input" placeholder="اختياري" />
-              </div>
-            </div>
-            <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 1rem;">
-              تسجيل المصروف
-            </button>
-          </form>
-        </div>
-      </div>
-    </div>
-
-    <!-- Advances Tab -->
-    <div class="tab-pane" id="tab-advances" hidden>
+    <div class="tab-content active" id="tab-advances">
       <div class="card">
         <div class="card-header">
-          <h2 class="card-title">إدارة العُهد</h2>
-          <div class="toolbar-actions">
-            <button class="btn btn-secondary btn-sm" id="btnExportJSON">تصدير</button>
-            <button class="btn btn-secondary btn-sm" id="btnImportJSON">استيراد</button>
-            <input id="importFile" type="file" accept="application/json" hidden />
-          </div>
+          <h2 class="card-title">إدارة العهد</h2>
         </div>
+        
+        <div class="search-bar">
+          <input class="search-input" placeholder="🔍 بحث في العهد..." />
+        </div>
+
         <div class="toolbar">
-          <input id="searchAdv" class="search-input" placeholder="بحث في العُهد..." />
+
         </div>
-        <div id="advTableWrap"></div>
+
+        <div class="data-list" id="advancesList">
+              <div class="data-item-title">جاري تحميل البيانات...</div>
+        </div>
       </div>
     </div>
-
-    <!-- Expenses Tab -->
-    <div class="tab-pane" id="tab-expenses" hidden>
+  </div>
+  
+    <div class="tab-content" id="tab-expenses">
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">إدارة المصروفات</h2>
         </div>
+        
+        <div class="search-bar">
+          <input class="search-input" placeholder="🔍 بحث في المصروفات..." />
+        </div>
+
         <div class="toolbar">
-          <input id="searchExp" class="search-input" placeholder="بحث في المصروفات..." />
-          <div class="toolbar-actions">
-            <select id="filterAdvance" class="form-input" style="min-width: 200px;"></select>
-            <button class="btn btn-secondary btn-sm" id="btnClearFilter">إلغاء التصفية</button>
+          <select class="form-input" style="flex: 2;">
+            <option value="">كل العهد</option>
+            <option value="1">عهدة مشروع تطوير الموقع - #CH-000</option>
+          </select>
+          <button class="btn btn-secondary">❌ إلغاء التصفية</button>
+        </div>
+
+        <div class="data-list" id="expensesList">
+          <div class="data-item">
+            <div class="data-item-header">
+              <div class="data-item-title">شراء معدات مكتبية</div>
+              <div class="data-item-badge">فاتورة</div>
+            </div>
+            <div class="data-item-grid">
+              <div class="data-field">
+                <span class="data-field-label">المبلغ</span>
+                <span class="data-field-value">1,200.00 ر.س</span>
+              </div>
+              <div class="data-field">
+                <span class="data-field-label">التاريخ</span>
+                <span class="data-field-value">2025-10-18</span>
+              </div>
+              <div class="data-field">
+                <span class="data-field-label">العهدة</span>
+                <span class="data-field-value">#CH-000</span>
+              </div>
+              <div class="data-field">
+                <span class="data-field-label">رقم الفاتورة</span>
+                <span class="data-field-value">INV-2025-045</span>
+              </div>
+            </div>
           </div>
         </div>
-        <div id="expTableWrap"></div>
       </div>
     </div>
 
-    <!-- Reports Tab -->
-    <div class="tab-pane" id="tab-reports" hidden>
-      <div class="reports-grid">
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">ملخص عام</h2>
-          </div>
-          <div id="reportSummary"></div>
+    <div class="tab-content" id="tab-reports">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">📊 ملخص عام</h2>
         </div>
-        <div class="card">
-          <div class="card-header">
-            <h2 class="card-title">تقرير عُهدة محددة</h2>
-            <button class="btn btn-secondary btn-sm" id="btnPrint">طباعة</button>
+        <div class="data-item-grid">
+          <div class="data-field">
+            <span class="data-field-label">عدد العهد</span>
+            <span class="data-field-value" style="font-size: 28px; color: var(--primary-light)">0</span>
           </div>
-          <div class="form-group">
-            <select id="reportAdvance" class="form-input"></select>
+          <div class="data-field">
+            <span class="data-field-label">إجمالي المصروفات</span>
+            <span class="data-field-value" style="font-size: 28px; color: var(--warning)">0.0 ريال/span>
           </div>
-          <div id="reportDetails"></div>
+          <div class="data-field">
+            <span class="data-field-label">متوسط المصروف</span>
+            <span class="data-field-value" style="font-size: 28px;">0.0 ريال</span>
+          </div>
+          <div class="data-field">
+            <span class="data-field-label">نسبة الإنفاق</span>
+            <span class="data-field-value" style="font-size: 28px; color: var(--success)">0.0 ريال</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">📄 تقرير عهدة محددة</h2>
+          <button class="btn btn-secondary btn-sm">🖨️ طباعة</button>
+        </div>
+        <div class="form-group">
+          <select class="form-input">
+            <option value="">اختر عهدة...</option>
+            <option value="1">عهدة مشروع تطوير الموقع - #CH-000</option>
+          </select>
+        </div>
+     </div>
+</div>
+
+    <div class="tab-content" id="tab-about">
+      <div class="card">
+        <div class="card-header">
+          <h2 class="card-title">ℹ️ معلومات النظام</h2>
+        </div>
+        
+        <div style="text-align: center; padding: 20px 0;">
+          <div class="logo" style="width: 80px; height: 80px; margin: 0 auto 20px; font-size: 32px;">QB</div>
+          <h2 style="font-size: 24px; font-weight: 700; margin-bottom: 8px; color: var(--text-primary);">QB-Ledg</h2>
+          <p style="color: var(--text-muted); margin-bottom: 30px;">نظام إدارة العهدة الاحترافي</p>
+        </div>
+
+        <div style="background: var(--surface-light); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">📋 حول النظام</h3>
+          <p style="color: var(--text-secondary); line-height: 1.8; margin-bottom: 12px;">
+            نظام QB-Ledg هو حل متكامل لإدارة العهد والمصروفات بطريقة احترافية وسهلة. يساعدك النظام على تتبع جميع العهد المالية ومصروفاتها بدقة وشفافية.
+          </p>
+        </div>
+
+        <div style="background: var(--surface-light); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">✨ المميزات</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; align-items: start; gap: 10px;">
+              <span style="color: var(--success); font-size: 20px;">✓</span>
+              <span style="color: var(--text-secondary);">إدارة العهد بشكل كامل وسهل</span>
+            </div>
+            <div style="display: flex; align-items: start; gap: 10px;">
+              <span style="color: var(--success); font-size: 20px;">✓</span>
+              <span style="color: var(--text-secondary);">تتبع المصروفات لحظياً</span>
+            </div>
+            <div style="display: flex; align-items: start; gap: 10px;">
+              <span style="color: var(--success); font-size: 20px;">✓</span>
+              <span style="color: var(--text-secondary);">تقارير تفصيلية وإحصائيات دقيقة</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: var(--surface-light); border-radius: 12px; padding: 20px; margin-bottom: 20px;">
+          <h3 style="font-size: 16px; font-weight: 600; margin-bottom: 16px; color: var(--text-primary);">👨‍💻 معلومات المطور</h3>
+          <div style="display: flex; flex-direction: column; gap: 12px;">
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+              <span style="color: var(--text-muted); font-size: 13px;">اسم المطور</span>
+              <span style="color: var(--text-primary); font-weight: 600;">بلال الخواجة</span>
+            </div>
+          </div>
+        </div>
+
+        <div style="background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%); border-radius: 12px; padding: 20px; text-align: center;">
+          <div style="display: flex; flex-direction: column; gap: 8px; align-items: center;">
+            <span style="color: rgba(255,255,255,0.8); font-size: 13px;">إصدار النظام</span>
+            <span style="color: white; font-size: 32px; font-weight: 700;">v2.1.1</span>
+            <span style="color: rgba(255,255,255,0.8); font-size: 12px;">تاريخ الإصدار: أكتوبر 2025</span>
+          </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+          <p style="color: var(--text-muted); font-size: 13px;">
+            © 2025 QB-Ledg. جميع الحقوق محفوظة
+          </p>
         </div>
       </div>
     </div>
   </div>
 
-  <!-- Floating Action Button -->
-  <button class="fab" id="fabAdd" title="إضافة سريع">+</button>
+  <div class="overlay" onclick="closeAddMenu()"></div>
 
-<script src="./assets/js/storage.gas.js"></script>
-<script src="./assets/js/app.js"></script>
+  <div class="add-menu" id="addMenu">
+    <button class="add-menu-item" onclick="openAdvanceModal()">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+      </svg>
+      <div class="add-menu-text">
+        <span class="add-menu-title">إضافة عهدة</span>
+        <span class="add-menu-desc">تسجيل عهدة جديدة</span>
+      </div>
+    </button>
+    <button class="add-menu-item" onclick="openExpenseModal()">
+      <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+      </svg>
+      <div class="add-menu-text">
+        <span class="add-menu-title">إضافة مصروف</span>
+        <span class="add-menu-desc">تسجيل مصروف على عهدة</span>
+      </div>
+    </button>
+  </div>
 
+  <nav class="bottom-nav">
+    <div class="bottom-nav-items">
+      <button class="nav-item active" onclick="switchTab('advances')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
+        </svg>
+        <span class="nav-label">العهد</span>
+      </button>
 
+      <button class="nav-item" onclick="switchTab('expenses')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z"/>
+        </svg>
+        <span class="nav-label">المصروفات</span>
+      </button>
+
+      <button class="nav-add-button" onclick="toggleAddMenu()">
+        <svg fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 4v16m8-8H4"/>
+        </svg>
+      </button>
+
+      <button class="nav-item" onclick="switchTab('reports')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+        </svg>
+        <span class="nav-label">التقارير</span>
+      </button>
+
+      <button class="nav-item" onclick="switchTab('about')">
+        <svg class="nav-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <span class="nav-label">المعلومات</span>
+      </button>
+    </div>
+  </nav>
+
+  <div class="modal" id="advanceModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">➕ إضافة عهدة جديدة</h2>
+        <button class="modal-close" onclick="closeAdvanceModal()">✕</button>
+      </div>
+      <form id="advanceForm">
+        <div class="modal-body">
+          <div class="form-grid cols-2">
+            <div class="form-group">
+              <label class="form-label">رقم التتبّع</label>
+              <input class="form-input" readonly placeholder="يُنشأ تلقائياً" value="#CH-000" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">التاريخ *</label>
+              <input class="form-input" type="date" required />
+            </div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">اسم/وصف العهدة *</label>
+            <input class="form-input" required placeholder="مثال: عهدة مشروع..." />
+          </div>
+          <div class="form-group">
+            <label class="form-label">المبلغ *</label>
+            <input class="form-input" type="number" min="0" step="0.01" required placeholder="0.00" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">ملاحظات</label>
+            <textarea class="form-input" placeholder="تفاصيل إضافية (اختياري)"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeAdvanceModal()">إلغاء</button>
+          <button type="submit" class="btn btn-primary">💾 حفظ العهدة</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="modal" id="expenseModal">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 class="modal-title">➕ إضافة مصروف</h2>
+        <button class="modal-close" onclick="closeExpenseModal()">✕</button>
+      </div>
+      <form id="expenseForm">
+        <div class="modal-body">
+          <div class="form-grid cols-2">
+            <div class="form-group">
+              <label class="form-label">اختر العهدة *</label>
+              <select class="form-input" required>
+                <option value="">اختر عهدة...</option>
+                <option value="1">عهدة مشروع تطوير الموقع - #CH-000</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label class="form-label">التاريخ *</label>
+              <input class="form-input" type="date" required />
+            </div>
+          </div>
+          <div class="form-grid cols-2">
+            <div class="form-group">
+              <label class="form-label">المبلغ المصروف *</label>
+              <input class="form-input" type="number" min="0" step="0.01" required placeholder="0.00" />
+            </div>
+            <div class="form-group">
+              <label class="form-label">النوع</label>
+              <select class="form-input" id="expenseType" onchange="toggleInvoiceField()">
+                <option value="invoice">فاتورة</option>
+                <option value="no-invoice">بدون فاتورة</option>
+              </select>
+            </div>
+          </div>
+          <div class="form-group" id="invoiceField">
+            <label class="form-label">رقم الفاتورة</label>
+            <input class="form-input" placeholder="مثال: INV-2025-001" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">اسم المصروف *</label>
+            <input class="form-input" required placeholder="مثال: شراء قرطاسية" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">ملاحظات</label>
+            <textarea class="form-input" placeholder="تفاصيل إضافية (اختياري)"></textarea>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" onclick="closeExpenseModal()">إلغاء</button>
+          <button type="submit" class="btn btn-primary">💾 تسجيل المصروف</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script src="./assets/js/storage.gas.js"></script>
+  <script src="./assets/js/app.js"></script>
+  
 </body>
 </html>
